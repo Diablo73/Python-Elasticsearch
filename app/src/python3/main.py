@@ -1,4 +1,4 @@
-from ESQueries import esBulkDelete
+from ESQueries import esBulkDelete, esBulkUpload
 
 
 def printStart():
@@ -34,11 +34,11 @@ def process():
 		printOptions()
 		i = input("Select an option: ")
 		if i == "1":
-			response = "Not yet implemented"
+			response = esBulkDelete.bulkDelete() + "\n" + esBulkUpload.bulkUpload()
 		elif i == "2":
 			response = esBulkDelete.bulkDelete()
 		elif i == "3":
-			response = "Not yet implemented"
+			response = esBulkUpload.bulkUpload()
 		elif i == "4":
 			response = "Not yet implemented"
 		else:

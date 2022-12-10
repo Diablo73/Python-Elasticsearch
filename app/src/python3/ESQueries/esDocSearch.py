@@ -4,7 +4,8 @@ import random
 import requests
 
 
-recordsFilePaths = ["app/src/resources/students_30k.json", "../../resources/students_30k.json"]
+recordsFilePaths = ["app/src/resources/students_30k.json", "../resources/students_30k.json",
+                    "../../resources/students_30k.json"]
 
 
 def searchADocumentUsingDocumentId():

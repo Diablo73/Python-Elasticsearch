@@ -5,8 +5,10 @@ import pytz
 from datetime import datetime
 
 
-recordsFilePaths = ["app/src/resources/students_30k_bulkES.txt", "../../resources/students_30k_bulkES.txt"]
-logsFilePaths = ["app/src/logs/esBulkUploadLogs.txt", "../../logs/esBulkUploadLogs.txt"]
+recordsFilePaths = ["app/src/resources/students_30k_bulkES.txt", "../resources/students_30k_bulkES.txt",
+                    "../../resources/students_30k_bulkES.txt"]
+logsFilePaths = ["app/src/logs/esBulkUploadLogs.txt", "../logs/esBulkUploadLogs.txt",
+                 "../../logs/esBulkUploadLogs.txt"]
 
 
 def bulkUpload():

@@ -2,10 +2,10 @@ import os
 import json
 import random
 import requests
+from app.src.python3.Utils import recordsUtils
 
 
-recordsFilePaths = ["app/src/resources/students_30k.json", "../resources/students_30k.json",
-                    "../../resources/students_30k.json"]
+MAX_NUMBER_OF_RECORDS = len(recordsUtils.getRecords())
 
 
 def printOptions():
@@ -45,37 +45,11 @@ def searchADocumentUsingDocumentId():
 def searchADocumentUsingKeyWord():
 	keyWord = input("Enter a key word or press enter for random existing : ")
 	if keyWord == "":
-		keyWord = random.choice(getKeyWordList())
+		keyWord = random.choice(recordsUtils.getKeyWordList())
 		print("keyWord : " + keyWord)
-	searchQueryBody = {"query": {"simple_query_string": {"query": keyWord}}}
+	searchQueryBody = {"size": MAX_NUMBER_OF_RECORDS, "query": {"simple_query_string": {"query": keyWord}}}
 	return requests.get(os.getenv("ES_URL") + "/" + os.getenv("ES_INDEX") + "/_search", json=searchQueryBody).json()
 
 
-def getKeyWordList():
-	records = getRecords()
-	keyWords = set()
-	for i in records:
-		keyWords.add(i["gender"])
-		keyWords.add(i["company"])
-		keyWords.add(i["state"])
-		keyWords.add(i["country"])
-		keyWords.add(i["credit_card_type"])
-	return list(keyWords)
-
-
 def getRandomDocumentId():
-	return random.choice(getRecords())["id"]
-
-
-def getRecords():
-	records = []
-	for path in recordsFilePaths:
-		try:
-			recordsJsonFile = open(path, "r")
-			records = json.loads(recordsJsonFile.read())
-			print("Data found in file : " + path)
-			recordsJsonFile.close()
-			break
-		except Exception as e:
-			print(str(e))
-	return records
+	return random.choice(recordsUtils.getRecords())["id"]

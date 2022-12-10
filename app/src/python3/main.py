@@ -21,7 +21,7 @@ def printOptions():
 		"1: Bulk-Delete and Bulk-Upload",
 		"2: Bulk-Delete only",
 		"3: Bulk-Upload only",
-		"4: Search a document using documentId",
+		"4: Search a document",
 		"0: Quit",
 		""
 	]
@@ -40,7 +40,7 @@ def process():
 		elif i == "3":
 			response = esBulkUpload.bulkUpload()
 		elif i == "4":
-			response = esDocSearch.searchADocumentUsingDocumentId()
+			response = esDocSearch.searchES()
 		else:
 			break
 		print(response)

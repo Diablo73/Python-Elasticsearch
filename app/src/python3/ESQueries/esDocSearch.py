@@ -45,7 +45,7 @@ def searchADocumentUsingDocumentId():
 def searchADocumentUsingKeyWord():
 	keyWord = input("Enter a key word or press enter for random existing : ")
 	if keyWord == "":
-		keyWord = random.choice(recordsUtils.getKeyWordList())
+		keyWord = random.choice(random.choice(recordsUtils.getKeyWordList()))
 		print("keyWord : " + keyWord)
 	searchQueryBody = {"size": MAX_NUMBER_OF_RECORDS, "query": {"simple_query_string": {"query": keyWord}}}
 	return requests.get(os.getenv("ES_URL") + "/" + os.getenv("ES_INDEX") + "/_search", json=searchQueryBody).json()

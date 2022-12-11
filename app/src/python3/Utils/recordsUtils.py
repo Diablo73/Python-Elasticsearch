@@ -21,11 +21,15 @@ def getRecords():
 
 def getKeyWordList():
 	records = getRecords()
-	keyWords = set()
+	genderWords = set()
+	companyWords = set()
+	stateWords = set()
+	countryWords = set()
+	credit_card_typeWords = set()
 	for i in records:
-		keyWords.add(i["gender"])
-		keyWords.add(i["company"])
-		keyWords.add(i["state"])
-		keyWords.add(i["country"])
-		keyWords.add(i["credit_card_type"])
-	return list(keyWords)
+		genderWords.add(i["gender"])
+		companyWords.add(i["company"])
+		stateWords.add(i["state"])
+		countryWords.add(i["country"])
+		credit_card_typeWords.add(i["credit_card_type"])
+	return [list(genderWords), list(companyWords), list(stateWords), list(countryWords), list(credit_card_typeWords)]

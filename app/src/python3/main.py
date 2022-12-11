@@ -1,4 +1,4 @@
-from ESQueries import esBulkDelete, esBulkUpload, esDocSearch
+from ESQueries import esBulkDelete, esBulkUpload, esDocCount, esDocSearch
 
 
 def printStart():
@@ -22,6 +22,7 @@ def printOptions():
 		"2: Bulk-Delete only",
 		"3: Bulk-Upload only",
 		"4: Search a document",
+		"5: Count of documents",
 		"0: Quit",
 		""
 	]
@@ -41,6 +42,8 @@ def process():
 			response = esBulkUpload.bulkUpload()
 		elif i == "4":
 			response = esDocSearch.searchES()
+		elif i == "5":
+			response = esDocCount.getTotalCountOfDocsInES()
 		else:
 			break
 		print(response)

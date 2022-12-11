@@ -2,7 +2,7 @@ import os
 import json
 import random
 import requests
-from app.src.python3.Utils import recordsUtils
+from Utils import recordsUtils
 
 
 MAX_NUMBER_OF_RECORDS = len(recordsUtils.getRecords())

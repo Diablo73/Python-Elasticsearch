@@ -33,7 +33,7 @@ def searchES():
 		elif i == "3":
 			response = searchQueryUsingLogicalAND()
 		elif i == "4":
-			response = "Not yet implemented"
+			response = searchQueryUsingLogicalOR()
 		else:
 			break
 		print(response)
@@ -41,6 +41,7 @@ def searchES():
 
 
 def searchESAPIWithJSONBody(jsonBody):
+	print("JSON Body = " + str(jsonBody))
 	return requests.get(os.getenv("ES_URL") + "/" + os.getenv("ES_INDEX") + "/_search", json=jsonBody).json()
 
 
@@ -57,13 +58,19 @@ def searchADocumentUsingKeyWord():
 	if keyWord == "":
 		keyWord = random.choice(random.choice(recordsUtils.getKeyWordList()))
 		print("keyWord : " + keyWord)
-	searchQueryBody = {"size": MAX_NUMBER_OF_RECORDS, "query": getFilterOptionQuery(keyWord)}
+	searchQueryBody = {"size": MAX_NUMBER_OF_RECORDS, "query": getKeyWordQuery(keyWord)}
 	return searchESAPIWithJSONBody(searchQueryBody)
 
 
 def searchQueryUsingLogicalAND():
-	filterQuery = getFilterQuery()
-	searchQueryBody = {"query": {"bool": {"filter": filterQuery}}}
+	filterQuery = getFilterQuery("AND")
+	searchQueryBody = {"size": MAX_NUMBER_OF_RECORDS, "query": {"bool": {"filter": filterQuery}}}
+	return searchESAPIWithJSONBody(searchQueryBody)
+
+
+def searchQueryUsingLogicalOR():
+	filterQuery = getFilterQuery("OR")
+	searchQueryBody = {"size": MAX_NUMBER_OF_RECORDS, "query": {"bool": {"filter": filterQuery}}}
 	return searchESAPIWithJSONBody(searchQueryBody)
 
 
@@ -71,23 +78,43 @@ def getRandomDocumentId():
 	return random.choice(recordsUtils.getRecords())["id"]
 
 
-def getFilterQuery():
-	filterQuery = []
+def getFilterQuery(logic):
+	filterKeyWords = []
 	print("Search based on logical AND")
 	print("Enter keyWords to search and then press enter to search")
 	print("Press enter for random existing (3 keyWords chosen randomly)")
 	while True:
-		keyword = input("Enter keyWord " + str(len(filterQuery) + 1) + " : ")
+		keyword = input("Enter keyWord " + str(len(filterKeyWords) + 1) + " : ")
 		if keyword == "":
 			break
-		filterQuery += [getFilterOptionQuery(keyword)]
-	if len(filterQuery) == 0:
-		keyWordList = recordsUtils.getKeyWordList()
-		filterQuery += [getFilterOptionQuery(random.choice(keyWordList[0]))]
-		filterQuery += [getFilterOptionQuery(random.choice(random.choice(keyWordList[1:4])))]
-		filterQuery += [getFilterOptionQuery(random.choice(keyWordList[4]))]
+		filterKeyWords += [keyword]
+	if len(filterKeyWords) == 0:
+		filterKeyWords = getFilterKeyWords(logic)
+	return getFilterOptionQuery(logic, filterKeyWords)
+
+
+def getKeyWordQuery(keyword):
+	return {"simple_query_string": {"query": keyword}}
+
+
+def getFilterOptionQuery(logic, filterKeyWords):
+	filterQuery = []
+	if logic == "OR":
+		filterKeyWords = [" ".join(filterKeyWords)]
+	for keyWord in filterKeyWords:
+		filterQuery += [getKeyWordQuery(keyWord)]
 	return filterQuery
 
 
-def getFilterOptionQuery(keyword):
-	return {"simple_query_string": {"query": keyword}}
+def getFilterKeyWords(logic):
+	filterKeyWords = []
+	keyWordList = recordsUtils.getKeyWordList()
+	if logic == "AND":
+		filterKeyWords += [random.choice(keyWordList[0])]
+		filterKeyWords += [random.choice(keyWordList[5])]
+		filterKeyWords += [random.choice(random.choice(keyWordList[1:5]))]
+	elif logic == "OR":
+		filterKeyWords += [str(random.randint(1, MAX_NUMBER_OF_RECORDS))]
+		filterKeyWords += [random.choice(random.choice(keyWordList[1:3]))]
+		filterKeyWords += [random.choice(random.choice(keyWordList[3:5]))]
+	return filterKeyWords

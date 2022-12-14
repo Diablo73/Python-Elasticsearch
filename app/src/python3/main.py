@@ -1,4 +1,4 @@
-from ESQueries import esBulkDelete, esBulkUpload, esDocCount, esDocSearch
+from ESQueries import esBulkDelete, esBulkUpload, esDocCount, esDocSearch, esThreadingTesting
 
 
 def printStart():
@@ -23,6 +23,7 @@ def printOptions():
 		"3: Bulk-Upload only",
 		"4: Search a document",
 		"5: Count of documents",
+		"6: Threading Testing",
 		"0: Quit",
 		""
 	]
@@ -44,6 +45,8 @@ def process():
 			response = esDocSearch.searchES()
 		elif i == "5":
 			response = esDocCount.getTotalCountOfDocsInES()
+		elif i == "6":
+			response = esThreadingTesting.threadingTesting()
 		else:
 			break
 		print(response)

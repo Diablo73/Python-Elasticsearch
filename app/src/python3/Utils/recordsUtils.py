@@ -19,6 +19,10 @@ def getRecords():
 	return records
 
 
+def getDocumentIds():
+	return [i["id"] for i in getRecords()]
+
+
 def getKeyWordList():
 	records = getRecords()
 	genderWords = set()

@@ -9,19 +9,22 @@ else:
 	from app.src.python3.Utils import recordsUtils
 
 
+TEST_SIZE = 1000
+
+
 def threadingTesting():
 	return singleThreading() + "\n"
 
 
 def singleThreading():
-	documentIdsList = recordsUtils.getDocumentIds()
+	documentIdsList = random.sample(recordsUtils.getDocumentIds(), TEST_SIZE)
 	startTime = time.time()
 	foundCount = 0
 	for documentId in documentIdsList:
 		response = getESDocument(documentId)
 		if response["found"]:
 			foundCount += 1
-		if foundCount % 1000 == 0:
+		if foundCount % (TEST_SIZE // 100) == 0:
 			print(foundCount)
 	duration = time.time() - startTime
 	return str({"testName": "Single Threading", "success count": foundCount, "time taken": duration})

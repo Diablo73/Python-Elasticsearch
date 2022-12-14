@@ -2,7 +2,10 @@ import os
 import json
 import random
 import requests
-from Utils import recordsUtils
+if "linux" in os.sys.platform:
+	from Utils import recordsUtils
+else:
+	from app.src.python3.Utils import recordsUtils
 
 
 MAX_NUMBER_OF_RECORDS = len(recordsUtils.getRecords())

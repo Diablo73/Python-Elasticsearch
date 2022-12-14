@@ -10,13 +10,14 @@ else:
 	from app.src.python3.Utils import recordsUtils
 
 
-TEST_SIZE = 1000
-NUMBER_OF_THREADS = 10
-
-
 def threadingTesting():
-	documentIdsList = random.sample(recordsUtils.getDocumentIds(), TEST_SIZE)
-	return singleThreading(documentIdsList) + "\n" + multiThreading(documentIdsList)
+	try:
+		testSize = int(input("Input Test Size : "))
+		numberOfThreads = int(input("Input number of Threads : "))
+		documentIdsList = random.sample(recordsUtils.getDocumentIds(), testSize)
+		return singleThreading(documentIdsList) + "\n" + multiThreading(documentIdsList, numberOfThreads)
+	except Exception as e:
+		return str(e)
 
 
 def singleThreading(documentIdsList):
@@ -26,14 +27,14 @@ def singleThreading(documentIdsList):
 	return str({"testName": "Single Threading", "success count": foundCount, "time taken": duration})
 
 
-def multiThreading(documentIdsList):
+def multiThreading(documentIdsList, numberOfThreads):
 	threadList = []
 	foundCount = 0
-	partition = (TEST_SIZE // NUMBER_OF_THREADS) + 1
-	for i in range(NUMBER_OF_THREADS):
+	partition = (len(documentIdsList) // numberOfThreads) + 1
+	for i in range(numberOfThreads):
 		start = i * partition
 		end = start + partition
-		if end >= TEST_SIZE:
+		if end >= len(documentIdsList):
 			end = len(documentIdsList)
 		threadList += [threading.Thread(target=threadRunProcess, args=(documentIdsList[start:end], foundCount))]
 
@@ -52,7 +53,7 @@ def threadRunProcess(documentIdsList, foundCount):
 		response = getESDocument(documentId)
 		if response["found"]:
 			foundCount += 1
-		if foundCount % (TEST_SIZE // 100) == 0:
+		if foundCount % (len(documentIdsList) // 10) == 0:
 			print(foundCount)
 	return foundCount
 

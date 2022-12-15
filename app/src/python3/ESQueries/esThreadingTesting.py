@@ -22,21 +22,21 @@ def threadingTesting():
 
 def singleThreading(documentIdsList):
 	startTime = time.time()
-	foundCount = threadRunProcess(documentIdsList, 0)
+	successList = threadRunProcess(documentIdsList, [])
 	duration = time.time() - startTime
-	return str({"testName": "Single Threading", "success count": foundCount, "time taken": duration})
+	return str({"testName": "Single Threading", "success count": len(successList), "time taken": duration})
 
 
 def multiThreading(documentIdsList, numberOfThreads):
 	threadList = []
-	foundCount = 0
+	successList = []
 	partition = (len(documentIdsList) // numberOfThreads) + 1
 	for i in range(numberOfThreads):
 		start = i * partition
 		end = start + partition
 		if end >= len(documentIdsList):
 			end = len(documentIdsList)
-		threadList += [threading.Thread(target=threadRunProcess, args=(documentIdsList[start:end], foundCount))]
+		threadList += [threading.Thread(target=threadRunProcess, args=(documentIdsList[start:end], successList))]
 
 	startTime = time.time()
 	for thread in threadList:
@@ -45,18 +45,23 @@ def multiThreading(documentIdsList, numberOfThreads):
 	for thread in threadList:
 		thread.join()
 	duration = time.time() - startTime
-	return str({"testName": "Multi Threading", "success count": foundCount, "time taken": duration})
+	return str({"testName": "Multi Threading", "success count": len(successList), "time taken": duration})
 
 
-def threadRunProcess(documentIdsList, foundCount):
-	for documentId in documentIdsList:
-		response = getESDocument(documentId)
+def threadRunProcess(documentIdsList, successList):
+	for i in range(len(documentIdsList)):
+		response = getESDocument(documentIdsList[i])
 		if response["found"]:
-			foundCount += 1
-		if foundCount % (len(documentIdsList) // 10) == 0:
-			print(foundCount)
-	return foundCount
+			successList += [documentIdsList[i]]
+		if (i + 1) % (len(documentIdsList) // 100) == 0:
+			print(str(i + 1) + " / " + str(len(documentIdsList)) + " - "
+			      + str(((i + 1) * 100) / len(documentIdsList)) + "%")
+	return successList
 
 
 def getESDocument(documentId):
-	return requests.get(os.getenv("ES_URL") + "/" + os.getenv("ES_INDEX") + "/_doc/" + documentId).json()
+	try:
+		return requests.get(os.getenv("ES_URL") + "/" + os.getenv("ES_INDEX") + "/_doc/" + documentId).json()
+	except Exception as e:
+		print("Exception for docId : " + documentId + " : " + str(e))
+		return {"found": False}

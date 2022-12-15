@@ -53,9 +53,9 @@ def threadRunProcess(documentIdsList, successList):
 		response = getESDocument(documentIdsList[i])
 		if response["found"]:
 			successList += [documentIdsList[i]]
-		if (i + 1) % (len(documentIdsList) // 100) == 0:
+		if len(documentIdsList) < 100 or (i + 1) % (len(documentIdsList) // 100) == 0:
 			print(str(i + 1) + " / " + str(len(documentIdsList)) + " - "
-			      + str(((i + 1) * 100) / len(documentIdsList)) + "%")
+			      + str(round(((i + 1) * 100) / len(documentIdsList), 2)) + "%")
 	return successList
 
 

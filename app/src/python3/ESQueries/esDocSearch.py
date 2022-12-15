@@ -2,6 +2,7 @@ import os
 import json
 import random
 import requests
+import prettytable
 if "linux" in os.sys.platform:
 	from Utils import recordsUtils
 else:
@@ -12,17 +13,16 @@ MAX_NUMBER_OF_RECORDS = len(recordsUtils.getRecords())
 
 
 def printOptions():
+	table = prettytable.PrettyTable(["Option", "Event"])
 	options = [
-		"",
-		"1: Search a document using documentId",
-		"2: Search a document using a keyWord",
-		"3: Search query using only logical AND",
-		"4: Search query using only logical OR",
-		"0: Quit",
-		""
+		[1, "Search a document using documentId"],
+		[2, "Search a document using a keyWord"],
+		[3, "Search query using only logical AND"],
+		[4, "Search query using only logical OR"],
+		[0, "Quit"]
 	]
-	for i in options:
-		print(i)
+	table.add_rows(options)
+	print(table)
 
 
 def searchES():

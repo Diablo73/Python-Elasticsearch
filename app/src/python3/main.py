@@ -1,4 +1,5 @@
 from ESQueries import esBulkDelete, esBulkUpload, esDocCount, esDocSearch, esThreadingTesting
+import prettytable
 
 
 def printStart():
@@ -16,19 +17,19 @@ def printEnd():
 
 
 def printOptions():
+	table = prettytable.PrettyTable(["Option", "Event"])
 	options = [
-		"",
-		"1: Bulk-Delete and Bulk-Upload",
-		"2: Bulk-Delete only",
-		"3: Bulk-Upload only",
-		"4: Search a document",
-		"5: Count of documents",
-		"6: Threading Testing",
-		"0: Quit",
-		""
+		[1, "Bulk-Delete and Bulk-Upload"],
+		[2, "Bulk-Delete only"],
+		[3, "Bulk-Upload only"],
+		[4, "Search a document"],
+		[5, "Count of documents"],
+		[6, "Threading Testing"],
+		[9, "Clear Console"],
+		[0, "Quit"],
 	]
-	for i in options:
-		print(i)
+	table.add_rows(options)
+	print(table)
 
 
 def process():

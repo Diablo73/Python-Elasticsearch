@@ -1,19 +1,24 @@
+import os
 from ESQueries import esBulkDelete, esBulkUpload, esDocCount, esDocSearch, esThreadingTesting
 import prettytable
+import art
 
 
 def printStart():
 	print()
-	print(("#" * 15) + " Python-Elasticsearch " + ("#" * 15))
-	print(("#" * 15) + (" " * 6) + " START!!! " + (" " * 6) + ("#" * 15))
+	art.tprint("Python-Elasticsearch", font="tarty1")
+	art.tprint("START", font="grafitti")
 	print()
 
 
 def printEnd():
 	print()
-	print(("#" * 15) + " Python-Elasticsearch " + ("#" * 15))
-	print(("#" * 15) + (" " * 6) + " END!!!!! " + (" " * 6) + ("#" * 15))
+	art.tprint("END", font="grafitti")
 	print()
+
+
+def clear():
+	return os.system("cls" if os.name == "nt" else "clear")
 
 
 def printOptions():
@@ -48,6 +53,8 @@ def process():
 			response = esDocCount.getTotalCountOfDocsInES()
 		elif i == "6":
 			response = esThreadingTesting.threadingTesting()
+		elif i == "9":
+			response = clear()
 		else:
 			break
 		print(response)

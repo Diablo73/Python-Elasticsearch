@@ -1,5 +1,5 @@
 import os
-from ESQueries import esBulkDelete, esBulkUpload, esDocCount, esDocSearch, esThreadingTesting
+from ESQueries import esBulkDelete, esBulkUpload, esDocCount, esDocSearch, esIndexManage, esThreadingTesting
 import prettytable
 import art
 
@@ -30,6 +30,7 @@ def printOptions():
 		[4, "Search a document"],
 		[5, "Count of documents"],
 		[6, "Threading Testing"],
+		[8, "Index Management"],
 		[9, "Clear Console"],
 		[0, "Quit"],
 	]
@@ -53,6 +54,8 @@ def process():
 			response = esDocCount.getTotalCountOfDocsInES()
 		elif i == "6":
 			response = esThreadingTesting.threadingTesting()
+		elif i == "8":
+			response = esIndexManage.manageIndex()
 		elif i == "9":
 			response = clear()
 		else:
